@@ -1,0 +1,164 @@
+
+================================================================================================
+// Approach for module plugins - low coupling
+
+
+// The following module uses the java interface com.server.Server
+// 	The implementations are accessed dynamically by using:
+//
+//	import java.util.ServiceLoader;
+//
+// 	ServiceLoader<Server> loader = ServiceLoader.load(Server.class);
+//
+// The com.app module is able to access the implementations of server 1 and 
+//	server 2 and it does not need to requires those module explicitly
+//
+
+module com.app {
+    requires com.server;
+    
+    uses com.server.Server;
+}
+
+
+// The module server
+module com.server {
+    exports com.server;
+}
+
+
+// The module server 1 that implements the Server interface
+module com.server.serverone {
+    requires com.server;
+
+    provides com.server.Server
+            with com.server.one.ServerOne;
+
+}
+
+// The module server 2 that implements the Server interface
+module com.server.servertwo {
+    requires com.server;
+
+    provides com.server.Server
+            with com.server.two.ServerTwo;
+
+}
+================================================================================================
+
+
+// There are frameworks that use java reflection to access our clasess, like Spring, JavaFX, etc
+// Since the modules are restrictive, we need a way to allow use reflection on our classes placed in a module
+
+// open directive exposes all our classes in our module be access for reflection, this happens only on runtime
+// this directive is not recommended since it opens the whole module
+
+open module com.app.gui {
+    requires com.server;
+
+    // JavaFx uses Reflection
+    // therefore it access our clasess by reflection
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
+
+
+    uses com.server.Server;
+}
+
+
+// opens directive exposes all our classes in the defined package to all modules for runtime reflection
+
+module com.app.gui {
+    requires com.server;
+
+    // JavaFx uses Reflection
+    // therefore it access our clasess by reflection
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
+
+
+    uses com.server.Server;
+
+    // only exposes for runtime reflection the classes of this package, but to all modules
+    opens com.app.gui;
+}
+
+
+// opens directive exposes all our classes in the defined package to all modules for runtime reflection
+
+module com.app.gui {
+    requires com.server;
+
+    // JavaFx uses Reflection
+    // therefore it access our clasess by reflection
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
+
+
+    uses com.server.Server;
+
+    // only exposes for runtime reflection the classes of this package to the modules javafx.graphics,javafx.fxml
+    opens com.app.gui
+    	to javafx.graphics,javafx.fxml;
+
+
+}
+
+
+
+    
+================================================================================================
+
+Requires Transitive
+
+
+// instead of declaring all list of modules required: model and another
+// it tells the module system that you required also the modules required by the modules we require
+// so we will have read access also to com.something.another module
+
+module com.something.cli {
+    requires transitive 
+        com.something.model;
+}
+
+module com.something.model {
+    requires com.something.another; 
+    exports  com.something.model;
+}
+
+================================================================================================
+
+
+Requires Static
+
+
+module com.something.cli {
+    requires com.something.model;
+}
+
+//  the module "another" should be at compile time but it is ok if the module is not in runtime
+
+module com.something.model {
+    requires static 
+        com.something.another; 
+    exports com.something.model;
+}
+        
+================================================================================================
+
+
+================================================================================================
+
+
+================================================================================================
+
+
+================================================================================================
+
+
+
+
+

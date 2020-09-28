@@ -1,0 +1,119 @@
+
+
+	Module System 
+
+
+		Module System - Motivation:
+
+			-	JARs can't define dependencies
+			-	Transitive dependencies
+			-	Shadowing and version conflicts
+			-	NoClassDefFoundError at runtime
+
+
+			JDK/JRE Monolithic and Very Large
+
+			-	And getting bigger with every Java release
+			-	Very large apps
+			-	JDK8 compact profiles
+
+
+		Module System - Goals
+
+			-	Reliable configuration
+					-	avoid runtime errors
+			-	Strong Encapsulation
+			-	Scalable Java Platform
+					-	selectively use the modules required
+			-	Greater Platform Integrity
+			-	Improve Performance and Security
+
+
+What a Module is:
+
+
+	Allows to define:
+
+		-	Exactly what you need
+		-	Exactly what you provide
+
+	Can contain:
+
+		-	Code
+		-	Data: in form of config files, native code, and resources
+
+
+	Declare a Module
+
+
+						module-info.java
+
+
+		com.something.model 			com.something.util
+
+			Class1.java 					Class4.java
+			Class2.java 					Class5.java
+			Class3.java
+
+
+
+	Directory Structure
+
+
+		src
+			com.somthing.app
+
+				com
+					something
+							  model
+							  		Class1.java
+							  		Class2.java
+							  		Class3.java
+				module-info.java
+
+
+
+	Module Declaration
+
+
+		module com.something.model {
+
+			// modules directives
+
+				-	What other MODULES do I REQUIRED?
+				-	What PACKAGES will I EXPORT to other modules?
+				-	What SERVICES do I PROVIDE to other modules?
+				-	What SERVICES do I USE from other modules?
+				-	Will my PACKAGES be OPEN to reflection?
+		}
+
+
+	
+
+
+	
+
+
+
+
+Java 8 Graph
+http://openjdk.java.net/projects/jigsaw/doc/jdk-modularization.html
+
+Then
+
+Java 9 Graph
+https://docs.oracle.com/javase/9/docs/api/java.se-graph.png
+https://docs.oracle.com/javase/9/docs/api/java.se.ee-summary.html
+
+
+
+Module Graph
+
+
+	Enforced Rules in 
+		[Compile Time, Link Time, Run Time]:
+
+		-	Graph has no cycles
+		-	No duplicate modules
+		-	Packages in modules are unique
+

@@ -1,0 +1,20 @@
+
+    jlink: The Java Linker
+    ......................
+
+    -   New command line tool
+    -   Make your own JRE: Only necessary modules are included
+
+
+     jlink  --module-path <module_path> \                     //where to find the modules
+            --add-modules <modules> \                         //add the modules we need
+            --limit-modules <modules> \                       //limit the observable modules
+            --launcher <NAME>=<MODULE_NAME>/<MAIN_CLASS> \    // Optional: allows to create a executable called <NAME>
+            --output <path>                                   //dir where the runtime umage will be located
+            --compress 2 \              // reduce the final image using Jlink Plugins
+            --no-header-files \         // reduce the final image using Jlink Plugins
+            --no-man-pages \            // reduce the final image using Jlink Plugins
+            --strip-debug \             // reduce the final image using Jlink Plugins
+
+
+
